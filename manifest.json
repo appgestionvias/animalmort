@@ -1,0 +1,42 @@
+{
+  "name": "Gestió FGC Pro - Suite Completa",
+  "short_name": "FGC Pro",
+  "description": "Suite professional per a gestió d'operacions ferroviàries FGC",
+  "start_url": ".",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#5d3891",
+  "theme_color": "#5d3891",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "utilities", "business"],
+  "lang": "ca-ES",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false,
+  "features": [
+    "Parte Diario",
+    "Gestió de Dies (Vacances)",
+    "Registre Animals Morts",
+    "Gestió de PKs"
+  ]
+}
