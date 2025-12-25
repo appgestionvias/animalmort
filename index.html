@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Gestió FGC</title>
+
+    <!-- CONFIGURACIÓN PARA QUE EL ICONO APAREZCA EN EL MÓVIL -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FGC Pro">
+    <meta name="theme-color" content="#5d3891">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            background-color: #5d3891; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        #app-wrapper {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            background: 
+                linear-gradient(to right, 
+                    rgba(93, 56, 145, 1) 0%, 
+                    rgba(93, 56, 145, 0.85) 40%, 
+                    rgba(93, 56, 145, 0) 100%),
+                url('icon.png') no-repeat;
+            background-size: cover;
+            background-position: center right -100px;
+            position: relative;
+        }
+
+        /* --- MENÚ PRINCIPAL --- */
+        #menu-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 5%;
+            z-index: 10;
+            transition: opacity 0.4s ease;
+        }
+
+        #menu-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .menu-title {
+            color: white;
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 40px;
+            text-align: center;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* --- GRID DE BOTONES 2x2 --- */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 600px;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        /* --- BOTONES --- */
+        .btn {
+            background: white;
+            color: #5d3891;
+            border: none;
+            padding: 24px 20px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            min-height: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(93, 56, 145, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-icon {
+            background: linear-gradient(135deg, #5d3891 0%, #7a4bb5 100%);
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(93, 56, 145, 0.3);
+        }
+
+        .btn-label {
+            font-size: 13px;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        /* --- AJUSTES MÓVIL --- */
+        @media (max-width: 600px) {
+            #app-wrapper {
+                background-position: 60% center; 
+            }
+
+            .menu-title {
+                font-size: 28px;
+                margin-bottom: 30px;
+            }
+
+            .btn-grid {
+                gap: 12px;
+                padding: 0 15px;
+            }
+
+            .btn {
+                min-height: 130px;
+                padding: 20px 16px;
+            }
+
+            .btn-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 22px;
+            }
+
+            .btn-label {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .btn-grid {
+                grid-template-columns: 1fr;
+                max-width: 300px;
+            }
+
+            .btn {
+                min-height: 100px;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 16px;
+            }
+
+            .btn-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .btn-label {
+                text-align: left;
+            }
+        }
+
+        .version { 
+            position: absolute; 
+            bottom: 30px; 
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.5); 
+            font-size: 11px; 
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        /* IFRAME */
+        iframe {
+            width: 100%; 
+            height: 100%; 
+            border: none;
+            position: absolute; 
+            top: 0; 
+            left: 0;
+            opacity: 0; 
+            z-index: 5; 
+            transition: opacity 0.5s;
+            background: white;
+        }
+        
+        iframe.active { 
+            opacity: 1; 
+            z-index: 20; 
+        }
+
+        #back-btn {
+            position: fixed; 
+            bottom: 30px; 
+            left: 30px;
+            width: 56px; 
+            height: 56px;
+            background: #5d3891; 
+            color: white;
+            border-radius: 50%; 
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            font-size: 24px; 
+            z-index: 100;
+            cursor: pointer; 
+            opacity: 0; 
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 3px solid white;
+            transition: all 0.3s ease;
+            font-weight: 300;
+        }
+        
+        #back-btn.visible { 
+            opacity: 1; 
+            pointer-events: all; 
+        }
+
+        #back-btn:active {
+            transform: scale(0.9);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app-wrapper">
+        
+        <div id="menu-container">
+            <h1 class="menu-title">GESTIÓ<br>FGC PRO</h1>
+            
+            <div class="btn-grid">
+                <button class="btn" onclick="navegar('parteDiario')">
+                    <span class="btn-icon">📋</span>
+                    <span class="btn-label">Parte<br>Diario</span>
+                </button>
+                
+                <button class="btn" onclick="navegar('gestioDias')">
+                    <span class="btn-icon">🏖️</span>
+                    <span class="btn-label">Gestió<br>Dies</span>
+                </button>
+
+                <button class="btn" onclick="navegar('animalMort')">
+                    <span class="btn-icon">🐾</span>
+                    <span class="btn-label">Animal<br>Mort</span>
+                </button>
+
+                <button class="btn" onclick="navegar('gestioPKs')">
+                    <span class="btn-icon">📍</span>
+                    <span class="btn-label">Gestió<br>PKs</span>
+                </button>
+            </div>
+
+            <div class="version">FGC PRO V 3.0</div>
+        </div>
+
+        <iframe id="app" src=""></iframe>
+        <div id="back-btn" onclick="volverMenu()">✕</div>
+
+    </div>
+
+    <script>
+        const URLS = {
+            parteDiario: "https://script.google.com/macros/s/AKfycbypF6AhFvVsc6fI9VFNmH29BFWzFb2_UxZruEUuNb14nonT7A8Nq50PQTqyU2pDxzI/exec",
+            gestioDias: "TU_URL_VACACIONES_AQUI", // 🔥 Cambiar por la URL de la app de vacaciones
+            animalMort: "https://script.google.com/macros/s/AKfycbwJQZaUehW_JxmZEcJGn1r8TTYb3BoxxvXNFL24vwmy_aoLRkhT9uO-Rv5LF-WKvtkr/exec",
+            gestioPKs: "TU_URL_PKS_AQUI" // 🔥 Cambiar por la URL cuando la crees
+        };
+
+        const iframe = document.getElementById('app');
+        const menu = document.getElementById('menu-container');
+        const backBtn = document.getElementById('back-btn');
+
+        function navegar(tipo) {
+            if (!URLS[tipo] || URLS[tipo].includes('TU_URL')) {
+                alert('⚠️ Aplicació encara no configurada');
+                return;
+            }
+            
+            iframe.src = URLS[tipo];
+            iframe.classList.add('active');
+            backBtn.classList.add('visible');
+            menu.classList.add('hidden');
+        }
+
+        function volverMenu() {
+            iframe.classList.remove('active');
+            backBtn.classList.remove('visible');
+            menu.classList.remove('hidden');
+            setTimeout(() => { iframe.src = ""; }, 500);
+        }
+
+        // Prevenir zoom en móvil
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
